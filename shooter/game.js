@@ -19,8 +19,8 @@ function preload() {
 function create() {
   backround = game.add.tileSprite(0,0,800,600,'backround');
   backround.autoScroll(100,0);
-  cursors = game.input.keyboard.createCursorKeys();
   ltorpedo = game.add.sprite(744,300,'ltorpedo');
+  game.physics.enable(ltorpedo, Phaser.Physics.ARCADE);
   submarine = game.add.sprite(744,300,'submarine');
   game.physics.enable(submarine, Phaser.Physics.ARCADE);
   cursors = game.input.keyboard.createCursorKeys();
@@ -30,17 +30,32 @@ function update() {
   submarine.body.velocity.x = 0;
   submarine.body.velocity.y = 0;
 
-  ltorpedo.x = submarine.x;
-  ltorpedo.y = submarine.y;
+  if (! ltorpedo.shooting) {
+    ltorpedo.body.velocity.x = 0;
+    ltorpedo.body.velocity.x = 0;
+    ltorpedo.x = submarine.x;
+    ltorpedo.y = submarine.y;
+    ltorpedo.renderable = true;
+  }
 
-  if (cursors.up.isUp) {
-    submarine.body.velocity.x = -300;
+  if (cursors.up.isDown) {
+    submarine.body.velocity.y = -300;
   }
   else if (cursors.down.isDown) {
     submarine.body.velocity.y = 300;
-}  
-if (game.input.keyboard.isDown(Phaser.Keyboard.SPASEBAR)) {
+  }  
+  if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    ltorpedo.body.velocity.x = -1000;
+    ltorpedo.shooting = true;
 
+  }
+  if (ltorpedo.x < 0) {
+    ltorpedo.shooting = false;
+    ltorpedo.renderable = false;
+    ltorpedo.body.velocity.x = 0;
+    ltorpedo.body.velocity.y = 0;
+    ltorpedo.x = submarine.x;
+    ltorpedo.y = submarine.y;
   }
 }
 
