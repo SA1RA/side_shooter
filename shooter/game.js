@@ -23,7 +23,7 @@ function create() {
   ltorpedo = game.add.sprite(744,300,'ltorpedo');
   game.physics.enable(ltorpedo, Phaser.Physics.ARCADE);
   submarine = game.add.sprite(744,300,'submarine');
-  mine = game.add.sprite(100, 300, 'mine');
+  mine = game.add.sprite(100, 500, 'mine');
   game.physics.enable(submarine, Phaser.Physics.ARCADE);
   cursors = game.input.keyboard.createCursorKeys();
 }
@@ -63,18 +63,17 @@ function update() {
   }
 }
 
-function render() {
+function render() {}
 
 function collisionHandler(ltorpedo, mine) {
   ltorpedo.reset();
   mine.kill();
 }
-function minereset() {
+function ltropedoreset() {
     ltorpedo.shooting = false;
     ltorpedo.renderable = false;
     ltorpedo.body.velocity.x = 0;
     ltorpedo.body.velocity.y = 0;
     ltorpedo = submarine.x;
     ltorpedo = submarine.y;
-}
 }
