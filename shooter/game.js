@@ -1,20 +1,22 @@
 'use strict';
 
+
+var game = new Phaser.Game(800, 600, Phaser .AUTO, 'game',
+    {preload:preload,create:create,update:update,render:render});
+
+
 var submarine;
 var cursors;
 var backround;
 var ltorpedo;
-var mine;
+var squid;
 
-var game = new Phaser.Game(800,600,Phaser.AUTO,'game',
-  {preload:preload,create:create,update:update,render:render,});
 
 function preload() {
   game.load.image('backround', 'backround.gif');
   game.load.image('submarine', 'submarine.gif');
-  game.load.image('rtorpedo', 'rtorpedo.gif');
   game.load.image('ltorpedo', 'ltorpedo.gif');
-  game.load.image('mine', 'mine.gif');
+  game.load.image('squid', 'squid.gif');
 }
 
 function create() {
@@ -23,13 +25,14 @@ function create() {
   ltorpedo = game.add.sprite(744,300,'ltorpedo');
   game.physics.enable(ltorpedo, Phaser.Physics.ARCADE);
   submarine = game.add.sprite(744,300,'submarine');
-  mine = game.add.sprite(100, 500, 'mine');
   game.physics.enable(submarine, Phaser.Physics.ARCADE);
+  squid = game.add.sprite(submarine.y, submarine.x, 'squid');
+  game.physics.enable(squid, Phaser.Physics.ARCADE);
   cursors = game.input.keyboard.createCursorKeys();
 }
 
 function update() {
-  game.physics.arcade.overlap(ltorpedo, mine, collisionHandler, null, this);
+  game.physics.arcade.overlap(ltorpedo, squid, collisionHandler, null, this);
 
   submarine.body.velocity.x = 0;
   submarine.body.velocity.y = 0;
@@ -44,36 +47,39 @@ function update() {
 
   if (cursors.up.isDown) {
     submarine.body.velocity.y = -300;
+    if (! ltorpedo.shooting) {
+      ltorpedo.body.velocity.x = -300;
+    }
   }
+
   else if (cursors.down.isDown) {
     submarine.body.velocity.y = 300;
-  }  
+    if (! ltorpedo.shooting) {
+      ltorpedo.body.velocity.x = 300;
+    }
+  }
+
   if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
     ltorpedo.body.velocity.x = -1000;
     ltorpedo.shooting = true;
 
   }
-  if (ltorpedo.x < 0) {
-    ltorpedo.shooting = false;
-    ltorpedo.renderable = false;
-    ltorpedo.body.velocity.x = 0;
-    ltorpedo.body.velocity.y = 0;
-    ltorpedo.x = submarine.x;
-    ltorpedo.y = submarine.y;
-  }
+
+  if (ltorpedo.x < 0) ltorpedoReset();
 }
 
 function render() {}
 
-function collisionHandler(ltorpedo, mine) {
-  ltorpedo.reset();
-  mine.kill();
+function collisionHandler(ltorpedo, squid) {
+  ltorpedoReset();
+  repositionSquid();
 }
-function ltropedoreset() {
+function repositionSquid() {
+    squid.x = game.rnd.integerInRange(100,780);
+    squid.y = game.rnd.integerInRange(20, 540);  
+}
+function ltorpedoReset() {
     ltorpedo.shooting = false;
-    ltorpedo.renderable = false;
     ltorpedo.body.velocity.x = 0;
     ltorpedo.body.velocity.y = 0;
-    ltorpedo = submarine.x;
-    ltorpedo = submarine.y;
 }
