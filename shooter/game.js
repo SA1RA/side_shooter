@@ -26,7 +26,7 @@ function create() {
   game.physics.enable(ltorpedo, Phaser.Physics.ARCADE);
   submarine = game.add.sprite(744,300,'submarine');
   game.physics.enable(submarine, Phaser.Physics.ARCADE);
-  squid = game.add.sprite(submarine.y, submarine.x, 'squid');
+  squid = game.add.sprite(500, 300, 'squid');
   game.physics.enable(squid, Phaser.Physics.ARCADE);
   cursors = game.input.keyboard.createCursorKeys();
 }
